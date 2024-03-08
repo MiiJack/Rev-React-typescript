@@ -3,18 +3,22 @@ import { useState } from "react";
 import "./TaskManager.css";
 
 // TODO: create custom hook to manage task state
+interface Task{
+  id: string;
+  title: string;
+}
 export const TaskManager = () => {
   const [title, setTitle] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   // remove task from list
-  const completeTask = (id) => {
+  const completeTask = (id: string) => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  const updateTask = (id, taskUpdate) => {
-    const newTasks = tasks.slice();
+  const updateTask = (id: string, taskUpdate: Task) => {
+    const newTasks = [...tasks];
 
     const index = tasks.findIndex((task) => task.id === id);
 
@@ -37,7 +41,7 @@ export const TaskManager = () => {
     setTitle("");
   };
 
-  const handleSearch = (ev) => {
+  const handleSearch = (ev:React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(ev.target.value);
   };
 
@@ -73,7 +77,7 @@ export const TaskManager = () => {
                 type="text"
                 placeholder="Add new task"
                 value={task.title}
-                onChange={(e) => updateTask(task.id, { title: e.target.value })}
+                onChange={(e) => updateTask(task.id, { ...task, title: e.target.value })}
               />
               <button onClick={() => completeTask(task.id)}>Done</button>
             </div>
